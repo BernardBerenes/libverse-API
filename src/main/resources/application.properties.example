@@ -1,0 +1,10 @@
+spring.application.name=libverse
+server.port=8080
+spring.datasource.url=jdbc:postgresql://localhost:5432/libverse
+spring.datasource.username=
+spring.datasource.password=
+
+spring.jpa.show-sql=true
+
+jwt.secret=
+jwt.expiration=
