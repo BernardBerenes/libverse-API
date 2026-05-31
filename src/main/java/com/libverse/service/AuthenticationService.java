@@ -40,12 +40,7 @@ public class AuthenticationService {
 
     public LoginResponse login(LoginRequest request) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
             User user = Objects.requireNonNull((User) authentication.getPrincipal());
 

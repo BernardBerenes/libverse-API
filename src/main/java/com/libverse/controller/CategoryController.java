@@ -46,7 +46,7 @@ public class CategoryController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiResponse.success("Successfully create data"));
+                .body(ApiResponse.created("Successfully create data"));
     }
 
     @PatchMapping("/{categoryId}")

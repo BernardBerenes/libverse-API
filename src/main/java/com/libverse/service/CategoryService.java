@@ -33,7 +33,10 @@ public class CategoryService {
     }
 
     public List<CategoryResponse> list() {
-        return categoryRepository.findAll().stream().map(this::toResponse).toList();
+        return categoryRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     public CategoryResponse detail(Long categoryId) {
@@ -44,9 +47,7 @@ public class CategoryService {
     }
 
     public void create(CategoryRequest request) {
-        if (categoryRepository.existsByName(request.getName())) {
-            throw new IllegalArgumentException("Category name already exists");
-        }
+        if (categoryRepository.existsByName(request.getName())) throw new IllegalArgumentException("Category name already exists");
 
         Category category = new Category();
         category.setName(request.getName());

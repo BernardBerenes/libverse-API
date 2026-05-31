@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryRequest {
+public class CountryRequest {
+    @NotBlank(message = "Code is required")
+    @Size(min = 3, max = 3)
+    private String code;
+
     @NotBlank(message = "Name is required")
     @Size(max = 100)
     private String name;
