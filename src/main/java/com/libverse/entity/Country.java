@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -24,4 +26,7 @@ public class Country extends BaseEntity {
 
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "nationality")
+    private List<Author> authors;
 }

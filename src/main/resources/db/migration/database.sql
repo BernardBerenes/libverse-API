@@ -31,3 +31,16 @@ CREATE TABLE categories (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMPTZ NULL
 );
+
+CREATE TABLE authors (
+    id UUID PRIMARY KEY,
+    country_id BIGSERIAL,
+    name VARCHAR(255) NOT NULL,
+    biography TEXT,
+    birth_date DATE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMPTZ NULL,
+
+    CONSTRAINT authors_country_id_fkey FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE RESTRICT ON UPDATE CASCADE
+);
