@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -34,4 +35,7 @@ public class Author extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "country_id")
     private Country nationality;
+
+    @OneToMany(mappedBy = "author")
+    private List<Book> books;
 }

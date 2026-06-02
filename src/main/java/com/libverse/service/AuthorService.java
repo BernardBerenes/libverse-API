@@ -4,6 +4,7 @@ import com.libverse.dto.request.AuthorRequest;
 import com.libverse.dto.response.AuthorResponse;
 import com.libverse.dto.response.CountryResponse;
 import com.libverse.entity.Author;
+import com.libverse.entity.Category;
 import com.libverse.entity.Country;
 import com.libverse.repository.AuthorRepository;
 import com.libverse.repository.CountryRepository;
@@ -13,6 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +46,13 @@ public class AuthorService {
         return (name != null && !name.isBlank()) ? authorRepository.findByNameContainingIgnoreCase(name, pageable).map(this::toResponse) : authorRepository.findAll(pageable).map(this::toResponse);
     }
 
+    public List<AuthorResponse> list() {
+        return authorRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public void create(AuthorRequest request) {
         Country country = countryRepository.findById(request.getCountryId())
                 .orElseThrow(() -> new IllegalArgumentException("Country not found"));
@@ -50,6 +62,28 @@ public class AuthorService {
         author.setName(request.getName());
         author.setBiography(request.getBiography());
         author.setBirthDate(request.getBirthDate());
+        authorRepository.save(author);
+    }
+
+    public void update(UUID authorId, AuthorRequest request) {
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new IllegalArgumentException("Author not found"));
+
+        Country country = countryRepository.findById(request.getCountryId())
+                .orElseThrow(() -> new IllegalArgumentException("Country not found"));
+
+        author.setNationality(country);
+        author.setName(request.getName());
+        author.setBiography(request.getBiography());
+        author.setBirthDate(request.getBirthDate());
+        authorRepository.save(author);
+    }
+
+    public void delete(UUID authorId) {
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new IllegalArgumentException("Author not found"));
+
+        author.setDeletedAt(Instant.now());
         authorRepository.save(author);
     }
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -18,4 +20,7 @@ public class Category extends BaseEntity {
 
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "category")
+    private List<Book> books;
 }
