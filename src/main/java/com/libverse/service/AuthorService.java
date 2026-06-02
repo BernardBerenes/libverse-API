@@ -4,7 +4,6 @@ import com.libverse.dto.request.AuthorRequest;
 import com.libverse.dto.response.AuthorResponse;
 import com.libverse.dto.response.CountryResponse;
 import com.libverse.entity.Author;
-import com.libverse.entity.Category;
 import com.libverse.entity.Country;
 import com.libverse.repository.AuthorRepository;
 import com.libverse.repository.CountryRepository;

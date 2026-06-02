@@ -42,5 +42,24 @@ CREATE TABLE authors (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMPTZ NULL,
 
-    CONSTRAINT authors_country_id_fkey FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT fk_authors_countries FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE books (
+    id UUID PRIMARY KEY,
+    author_id UUID NOT NULL,
+    category_id BIGSERIAL NOT NULL,
+    isbn VARCHAR(13) NOT NULL UNIQUE,
+    title VARCHAR(255) NOT NULL,
+    cover_url TEXT,
+    published_year INTEGER NOT NULL,
+    total_pages INTEGER NOT NULL,
+    synopsis TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMPTZ NULL,
+
+    CONSTRAINT fk_books_author FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE SET NULL,
+
+    CONSTRAINT fk_books_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );

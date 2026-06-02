@@ -2,7 +2,6 @@ package com.libverse.service;
 
 import com.libverse.dto.request.CountryRequest;
 import com.libverse.dto.response.CountryResponse;
-import com.libverse.entity.Category;
 import com.libverse.entity.Country;
 import com.libverse.repository.CountryRepository;
 import lombok.RequiredArgsConstructor;

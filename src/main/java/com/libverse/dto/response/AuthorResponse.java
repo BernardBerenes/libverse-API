@@ -1,7 +1,6 @@
 package com.libverse.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.libverse.entity.Country;
 import lombok.Builder;
 import lombok.Data;
 
