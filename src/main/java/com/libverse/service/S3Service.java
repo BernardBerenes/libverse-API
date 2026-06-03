@@ -1,12 +1,12 @@
 package com.libverse.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -37,6 +37,19 @@ public class S3Service {
             throw new RuntimeException("Failed to read file", exception);
         } catch (Exception exception) {
             throw new RuntimeException("Failed to upload file", exception);
+        }
+    }
+
+    public void delete(String filename) {
+        try {
+            DeleteObjectRequest request = DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(filename)
+                    .build();
+
+            s3Client.deleteObject(request);
+        } catch (Exception exception) {
+            throw new RuntimeException("Failed to delete file", exception);
         }
     }
 }

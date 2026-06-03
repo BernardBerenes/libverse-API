@@ -19,6 +19,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +60,31 @@ public class BookService {
                 .build();
     }
 
+    private void upsert(BookRequest request, Book book) {
+        Author author = authorRepository.findById(request.getAuthorId())
+                .orElseThrow(() -> new IllegalArgumentException("Author not found"));
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        String coverUrl = null;
+        if (request.getCover() != null && !request.getCover().isEmpty()) {
+            if (book.getCoverUrl() != null) s3Service.delete(book.getCoverUrl());
+
+            coverUrl = s3Service.upload(request.getCover());
+        }
+
+        book.setAuthor(author);
+        book.setCategory(category);
+        book.setIsbn(request.getIsbn());
+        book.setTitle(request.getTitle());
+        book.setCoverUrl(coverUrl);
+        book.setPublishedYear(request.getPublishedYear());
+        book.setTotalPages(request.getTotalPages());
+        book.setSynopsis(request.getSynopsis());
+        bookRepository.save(book);
+    }
+
     public Page<BookResponse> paginate(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
 
@@ -67,24 +94,26 @@ public class BookService {
     public void create(BookRequest request) throws IOException {
         if (bookRepository.existsByIsbn(request.getIsbn())) throw new IllegalArgumentException("ISBN already exists");
 
-        Author author = authorRepository.findById(request.getAuthorId())
-                .orElseThrow(() -> new IllegalArgumentException("Author not found"));
-
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
-
-        String coverUrl = null;
-        if (!request.getCover().isEmpty()) coverUrl = s3Service.upload(request.getCover());
-
         Book book = new Book();
-        book.setAuthor(author);
-        book.setCategory(category);
-        book.setIsbn(request.getIsbn());
-        book.setTitle(request.getTitle());
-        book.setCoverUrl(coverUrl);
-        book.setPublishedYear(request.getPublishedYear());
-        book.setTotalPages(request.getTotalPages());
-        book.setSynopsis(request.getSynopsis());
+        upsert(request, book);
+    }
+
+    public void update(UUID bookId, BookRequest request) {
+        if (bookRepository.existsByIsbnAndIdNot(request.getIsbn(), bookId)) throw new IllegalArgumentException("ISBN already exists");
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        upsert(request, book);
+    }
+
+    public void delete(UUID bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        s3Service.delete(book.getCoverUrl());
+
+        book.setDeletedAt(Instant.now());
         bookRepository.save(book);
     }
 }

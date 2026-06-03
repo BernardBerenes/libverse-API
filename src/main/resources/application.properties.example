@@ -4,7 +4,15 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/libverse
 spring.datasource.username=
 spring.datasource.password=
 
+spring.jpa.hibernate.ddl-auto=validate
 spring.jpa.show-sql=true
+
+spring.jackson.mapper.sort-properties-alphabetically=false
 
 jwt.secret=
 jwt.expiration=
+
+minio.endpoint=
+minio.access-key=
+minio.secret-key=
+minio.bucket=

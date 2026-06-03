@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,5 +35,19 @@ public class BookController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.created("Successfully create data"));
+    }
+
+    @PatchMapping("/{bookId}")
+    public ResponseEntity<ApiResponse<Void>> update(@PathVariable UUID bookId, @Valid @ModelAttribute BookRequest request) {
+        bookService.update(bookId, request);
+
+        return ResponseEntity.ok(ApiResponse.success("Successfully update data"));
+    }
+
+    @DeleteMapping("/{bookId}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable UUID bookId) {
+        bookService.delete(bookId);
+
+        return ResponseEntity.ok(ApiResponse.success("Successfully delete data"));
     }
 }
