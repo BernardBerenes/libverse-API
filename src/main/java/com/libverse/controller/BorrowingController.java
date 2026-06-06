@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,5 +34,12 @@ public class BorrowingController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.created("Successfully create data"));
+    }
+
+    @PostMapping("/confirm/{borrowingId}/{userId}")
+    public ResponseEntity<ApiResponse<Void>> confirm(@PathVariable UUID borrowingId, @PathVariable UUID userId) {
+        borrowingService.confirm(borrowingId, userId);
+
+        return ResponseEntity.ok(ApiResponse.success("Successfully confirm data"));
     }
 }

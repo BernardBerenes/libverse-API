@@ -5,6 +5,8 @@ import com.libverse.dto.response.*;
 import com.libverse.entity.Book;
 import com.libverse.entity.Borrowing;
 import com.libverse.entity.User;
+import com.libverse.entity.enums.BorrowStatus;
+import com.libverse.kafka.producer.MailProducer;
 import com.libverse.repository.BookRepository;
 import com.libverse.repository.BorrowingRepository;
 import com.libverse.util.AuthenticationUtil;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +29,8 @@ public class BorrowingService {
     private final BookRepository bookRepository;
 
     private final AuthenticationUtil authenticationUtil;
+
+    private final MailProducer mailProducer;
 
     private BorrowingResponse toResponse(Borrowing borrowing) {
         return BorrowingResponse.builder()
@@ -80,6 +86,26 @@ public class BorrowingService {
         borrowing.setUser(authenticatedUser);
         borrowing.setBook(book);
         borrowing.setDueDate(request.getDueDate());
+        borrowingRepository.save(borrowing);
+
+        mailProducer.send(authenticatedUser.getEmail(), "Confirmation Borrowing - " + book.getTitle(), "borrowing-created",
+                Map.of(
+                    "name", authenticatedUser.getName(),
+                    "book_title", book.getTitle(),
+                    "author_name", book.getAuthor().getName(),
+                    "isbn", book.getIsbn(),
+                    "borrow_date", LocalDate.now().toString(),
+                    "due_date", request.getDueDate().toString(),
+                    "status", borrowing.getStatus().name()
+                )
+        );
+    }
+
+    public void confirm(UUID borrowingId, UUID userId) {
+        Borrowing borrowing = borrowingRepository.findByIdAndUserIdAndStatus(borrowingId, userId, BorrowStatus.PENDING)
+                .orElseThrow(() -> new IllegalArgumentException("Borrowing not found"));
+
+        borrowing.setStatus(BorrowStatus.BORROWED);
         borrowingRepository.save(borrowing);
     }
 }

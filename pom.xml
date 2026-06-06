@@ -131,6 +131,12 @@
 			<version>2.26.12</version>
 		</dependency>
 
+		<!-- Thymeleaf for mail templates -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
 		<!--   Others 	-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
