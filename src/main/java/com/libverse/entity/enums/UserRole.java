@@ -1,6 +1,6 @@
 package com.libverse.entity.enums;
 
-public enum Role {
+public enum UserRole {
     ADMIN,
     LIBRARIAN,
     MEMBER

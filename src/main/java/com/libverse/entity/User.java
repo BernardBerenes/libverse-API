@@ -1,6 +1,6 @@
 package com.libverse.entity;
 
-import com.libverse.entity.enums.Role;
+import com.libverse.entity.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -36,14 +36,14 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", columnDefinition = "user_role")
     @JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    private Role role = Role.MEMBER;
+    private UserRole userRole = UserRole.MEMBER;
 
     // === UserDetails implementation ===
 
     @Override
     @NonNull
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(userRole.name()));
     }
 
     @Override

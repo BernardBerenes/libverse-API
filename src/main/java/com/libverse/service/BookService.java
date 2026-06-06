@@ -88,7 +88,8 @@ public class BookService {
     public Page<BookResponse> paginate(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
 
-        return bookRepository.findAll(pageable).map(this::toResponse);
+        return bookRepository.findAll(pageable)
+                .map(this::toResponse);
     }
 
     public void create(BookRequest request) throws IOException {

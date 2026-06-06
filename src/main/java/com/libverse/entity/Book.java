@@ -21,6 +21,14 @@ public class Book extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Column(name = "isbn")
     private String isbn;
 
@@ -38,12 +46,4 @@ public class Book extends BaseEntity {
 
     @Column(name = "synopsis")
     private String synopsis;
-
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Author author;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
 }

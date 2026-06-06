@@ -1,5 +1,6 @@
 package com.libverse.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -12,5 +13,6 @@ import lombok.NoArgsConstructor;
 public class CategoryRequest {
     @NotBlank(message = "Name is required")
     @Size(max = 100)
+    @JsonProperty("name")
     private String name;
 }

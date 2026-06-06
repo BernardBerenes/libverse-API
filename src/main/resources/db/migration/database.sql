@@ -4,6 +4,14 @@ CREATE TYPE user_role AS ENUM (
     'MEMBER'
 );
 
+CREATE TYPE borrow_status AS ENUM (
+    'PENDING',
+    'BORROWED',
+    'RETURNED',
+    'OVERDUE',
+    'COMPLETED'
+);
+
 CREATE TABLE users (
     id UUID PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -59,7 +67,25 @@ CREATE TABLE books (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMPTZ NULL,
 
-    CONSTRAINT fk_books_author FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE SET NULL,
+    CONSTRAINT fk_books_authors FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE SET NULL,
 
-    CONSTRAINT fk_books_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+    CONSTRAINT fk_books_categories FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+);
+
+CREATE TABLE borrowings (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
+    book_id UUID NOT NULL,
+    borrow_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    due_date DATE NOT NULL,
+    return_date DATE,
+    status borrow_status NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMPTZ NULL,
+
+    CONSTRAINT fk_borrowings_users FOREIGN KEY (user_id) REFERENCES users(id),
+
+    CONSTRAINT fk_borrowings_books FOREIGN KEY (book_id) REFERENCES books(id)
 );
