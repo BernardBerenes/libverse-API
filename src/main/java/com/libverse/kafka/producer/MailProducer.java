@@ -13,7 +13,7 @@ import java.util.Map;
 public class MailProducer {
     private final KafkaTemplate<String, MailMessage> kafkaTemplate;
 
-    @Value("${kafka.topic.mail}")
+    @Value("${kafka.mail.topic}")
     private String mailTopic;
 
     public void send(String to, String subject, String template, Map<String, Object> variables) {

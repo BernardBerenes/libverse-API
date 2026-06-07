@@ -8,14 +8,20 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 public class KafkaConfig {
-    @Value("${kafka.topic.mail}")
+    @Value("${kafka.mail.topic}")
     private String mailTopic;
+
+    @Value("${kafka.mail.partitions}")
+    private Integer mailPartitions;
+
+    @Value("${kafka.mail.replicas}")
+    private Integer mailReplicas;
 
     @Bean
     public NewTopic mailTopic() {
         return TopicBuilder.name(mailTopic)
-                .partitions(1)
-                .replicas(1)
+                .partitions(mailPartitions)
+                .replicas(mailReplicas)
                 .build();
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class MailConsumer {
     private final MailService mailService;
 
-    @KafkaListener(topics = "${kafka.topic.mail}", groupId = "${spring.kafka.consumer.group-id}")
+    @KafkaListener(topics = "${kafka.mail.topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void consume(MailMessage message) {
         mailService.send(message.getTo(), message.getSubject(), message.getTemplate(), message.getVariables());
     }

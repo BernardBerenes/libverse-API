@@ -108,4 +108,24 @@ public class BorrowingService {
         borrowing.setStatus(BorrowStatus.BORROWED);
         borrowingRepository.save(borrowing);
     }
+
+    public void returning(UUID borrowingId) {
+        User authenticatedUser = authenticationUtil.getAuthenticatedUser();
+
+        Borrowing borrowing = borrowingRepository.findByIdAndUserIdAndStatus(borrowingId, authenticatedUser.getId(), BorrowStatus.BORROWED)
+                .orElseThrow(() -> new IllegalArgumentException("Borrowing not found"));
+
+        borrowing.setStatus(BorrowStatus.RETURNED);
+        borrowingRepository.save(borrowing);
+    }
+
+    public void complete(UUID borrowingId) {
+        Borrowing borrowing = borrowingRepository.findById(borrowingId)
+                .orElseThrow(() -> new IllegalArgumentException("Borrowing not found"));
+
+        if (borrowing.getStatus() != BorrowStatus.RETURNED) throw new IllegalArgumentException("Borrowing not found");
+
+        borrowing.setStatus(BorrowStatus.COMPLETED);
+        borrowingRepository.save(borrowing);
+    }
 }

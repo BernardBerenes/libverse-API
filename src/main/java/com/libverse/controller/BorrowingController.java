@@ -40,6 +40,20 @@ public class BorrowingController {
     public ResponseEntity<ApiResponse<Void>> confirm(@PathVariable UUID borrowingId, @PathVariable UUID userId) {
         borrowingService.confirm(borrowingId, userId);
 
-        return ResponseEntity.ok(ApiResponse.success("Successfully confirm data"));
+        return ResponseEntity.ok(ApiResponse.success("Successfully confirm borrowing"));
+    }
+
+    @PatchMapping("/return/{borrowingId}")
+    public ResponseEntity<ApiResponse<Void>> returning(@PathVariable UUID borrowingId) {
+        borrowingService.returning(borrowingId);
+
+        return ResponseEntity.ok(ApiResponse.success("Successfully returning book"));
+    }
+
+    @PatchMapping("/complete/{borrowingId}")
+    public ResponseEntity<ApiResponse<Void>> complete(@PathVariable UUID borrowingId) {
+        borrowingService.complete(borrowingId);
+
+        return ResponseEntity.ok(ApiResponse.success("Successfully complete borrowing"));
     }
 }
