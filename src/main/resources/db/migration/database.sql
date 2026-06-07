@@ -20,7 +20,7 @@ CREATE TABLE users (
     role user_role NOT NULL DEFAULT 'MEMBER',
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMPTZ NULL
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE countries (
@@ -29,7 +29,7 @@ CREATE TABLE countries (
     name VARCHAR(100) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMPTZ NULL
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE categories (
@@ -37,7 +37,7 @@ CREATE TABLE categories (
     name VARCHAR(100) NOT NULL UNIQUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMPTZ NULL
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE authors (
@@ -48,7 +48,7 @@ CREATE TABLE authors (
     birth_date DATE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMPTZ NULL,
+    deleted_at TIMESTAMPTZ,
 
     CONSTRAINT fk_authors_countries FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -65,7 +65,7 @@ CREATE TABLE books (
     synopsis TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMPTZ NULL,
+    deleted_at TIMESTAMPTZ,
 
     CONSTRAINT fk_books_authors FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE SET NULL,
 
@@ -83,9 +83,22 @@ CREATE TABLE borrowings (
     notes TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMPTZ NULL,
+    deleted_at TIMESTAMPTZ,
 
     CONSTRAINT fk_borrowings_users FOREIGN KEY (user_id) REFERENCES users(id),
 
     CONSTRAINT fk_borrowings_books FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
+CREATE TABLE fines (
+    id UUID PRIMARY KEY,
+    borrowing_id UUID NOT NULL,
+    amount INTEGER NOT NULL,
+    paid BOOLEAN NOT NULL DEFAULT FALSE,
+    paid_at TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMPTZ,
+
+    CONSTRAINT fk_fines_borrowings FOREIGN KEY (borrowing_id) REFERENCES borrowings(id)
 );
