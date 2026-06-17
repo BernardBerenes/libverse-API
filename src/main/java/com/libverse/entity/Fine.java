@@ -20,6 +20,7 @@ import java.util.UUID;
 public class Fine extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
     @OneToOne

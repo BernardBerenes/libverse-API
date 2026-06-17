@@ -102,3 +102,18 @@ CREATE TABLE fines (
 
     CONSTRAINT fk_fines_borrowings FOREIGN KEY (borrowing_id) REFERENCES borrowings(id)
 );
+
+CREATE TABLE reviews (
+     id UUID PRIMARY KEY,
+     user_id UUID NOT NULL,
+     book_id UUID NOT NULL,
+     rating INTEGER,
+     comment TEXT,
+     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     deleted_at TIMESTAMPTZ,
+
+     CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+
+     CONSTRAINT fk_reviews_book FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);

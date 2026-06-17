@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,26 +15,24 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @SQLRestriction("deleted_at IS NULL")
-@Table(name = "authors")
-public class Author extends BaseEntity {
+@Table(name = "reviews")
+public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "biography")
-    private String biography;
-
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country nationality;
+    @JoinColumn(name = "book_id")
+    private Book book;
 
-    @OneToMany(mappedBy = "author")
-    private List<Book> books;
+    @Column(name = "rating")
+    private Integer rating;
+
+    @Column(name = "comment")
+    private String comment;
 }

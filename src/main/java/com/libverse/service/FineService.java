@@ -40,6 +40,7 @@ public class FineService {
             Fine fine = new Fine();
             fine.setBorrowing(borrowing);
             fine.setAmount(amount);
+            fine.setPaid(false);
             fineRepository.save(fine);
         }
     }

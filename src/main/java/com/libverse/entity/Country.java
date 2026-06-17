@@ -19,6 +19,7 @@ import java.util.List;
 public class Country extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "code")
